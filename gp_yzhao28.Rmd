@@ -1,0 +1,21 @@
+---
+title: "gp_yzhao28"
+output: html_document
+---
+
+```{r}
+library(lpSolveAPI)
+gp_yzhao28 <- read.lp("gp_yzhao28.lp")
+gp_yzhao28
+```
+### Solve
+```{r}
+solve(gp_yzhao28)
+get.objective(gp_yzhao28)
+```
+###solution
+```{r}
+get.variables(gp_yzhao28)
+```
+
+###remarks

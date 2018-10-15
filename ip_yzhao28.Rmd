@@ -1,0 +1,287 @@
+---
+title: "ip_yzhao28"
+output: html_document
+---
+```{r}
+library(lpSolveAPI)
+sp <- read.lp("ip_yzhao28.lp")
+sp
+```
+
+```{r}
+solve(sp)
+get.objective(sp)
+sp
+```
+```{r}
+get.variables(sp)
+sp
+get.constraints(sp)
+```
+###remarks
+We have already got x1= 3.75, and x2= 2.25, then we need to add more constraints to find integer solutions. 
+
+###Branch 1
+```{r}
+sp1 <- read.lp("ip_1yzhao28.lp")
+sp1 
+```
+```{r}
+solve(sp1)
+get.objective(sp1)
+sp1
+```
+
+```{r}
+get.variables(sp1)
+sp1
+get.constraints(sp1)
+```
+###remarks
+We get the maximum is 39, and x1= 3, x2= 3. 
+
+###Branch 2
+```{r}
+sp2 <- read.lp("ip_2yzhao28.lp")
+sp2
+```
+```{r}
+solve(sp2)
+get.objective(sp2)
+sp2
+```
+```{r}
+get.variables(sp2)
+sp2
+get.constraints(sp2)
+```
+###remarks
+we have got max= 41, and x1= 4, x2= 1.8.
+
+###Branch3
+```{r}
+sp3 <- read.lp("ip_3yzhao28.lp")
+sp3
+```
+```{r}
+solve(sp3)
+get.objective(sp3)
+sp3
+get.variables(sp3)
+sp3
+get.constraints(sp3)
+```
+
+###remarks 
+we have got the max= 40.55556, x1= 4.444444, x2= 1. 
+
+###Branch 4
+```{r}
+sp4 <- read.lp("ip_4yzhao28.lp")
+sp4 
+```
+
+```{r}
+solve(sp4)
+get.objective(sp4)
+sp4
+get.variables(sp4)
+sp4
+get.constraints(sp4)
+```
+###remarks
+We have got max= 37, x1= 4, x2= 1.
+
+###Branch 5
+```{r}
+sp5 <- read.lp("ip_5yzhao28.lp")
+sp5
+```
+
+```{r}
+solve(sp5)
+get.objective(sp5)
+sp5
+get.variables(sp5)
+sp5
+get.constraints(sp5)
+```
+###remarks
+We have got max= 40, x1= 5, x2= 0.
+
+###Branch 6
+```{r}
+sp6 <- read.lp("ip_6yzhao28.lp")
+sp6
+```
+```{r}
+solve(sp6)
+get.objective(sp6)
+sp6
+get.variables(sp6)
+sp6
+get.constraints(sp6)
+```
+###remarks
+No solution for this branch. 
+
+###Branch 7
+```{r}
+sp7 <- read.lp("ip_7yzhao28.lp")
+sp7
+```
+```{r}
+solve(sp7)
+get.objective(sp7)
+sp7
+get.variables(sp7)
+sp7
+get.constraints(sp7)
+```
+###remark
+We have got max= 41.11111, and x1= 3.888889, x2= 2.
+
+###Branch 8
+```{r}
+sp8 <- read.lp("ip_8yzhao28.lp")
+sp8
+```
+```{r}
+solve(sp8)
+get.objective(sp8)
+sp8
+get.variables(sp8)
+sp8
+get.constraints(sp8)
+```
+###remarks
+We have got max= 34, x1= 3, x2= 2. But 34 is smaller than 40. 
+
+###Branch 9
+```{r}
+sp9 <- read.lp("ip_9yzhao28.lp")
+sp9
+```
+```{r}
+solve(sp9)
+get.objective(sp9)
+sp9
+get.variables(sp9)
+sp9
+get.constraints(sp9)
+```
+###remarks
+We have got max= 41, and x1= 4, x2= 1.8. 
+
+###Branch 10
+```{r}
+sp10 <- read.lp("ip_10yzhao28.lp")
+sp10
+```
+```{r}
+solve(sp10)
+get.objective(sp10)
+sp10
+get.variables(sp10)
+sp10
+get.constraints(sp10)
+```
+###remarks
+We have got max= 40.55556, and x1= 4.444444, x2= 1. 
+
+###Branch 11
+```{r}
+sp11 <- read.lp("ip_11yzhao28.lp")
+sp11
+```
+```{r}
+solve(sp11)
+get.objective(sp11)
+sp11
+get.variables(sp11)
+sp11
+get.constraints(sp11)
+```
+###remarks
+We have got max= 37, and x1= 4, x2= 1. 
+
+###Branch 12
+```{r}
+sp12 <- read.lp("ip_12yzhao28.lp")
+sp12
+```
+```{r}
+solve(sp12)
+get.objective(sp12)
+sp12
+get.variables(sp12)
+sp12
+get.constraints(sp12)
+```
+###remarks
+We have got max= 40, and x1= 5, x2= 0. 
+
+###Branch 13
+```{r}
+sp13 <- read.lp("ip_13yzhao28.lp")
+sp13
+```
+```{r}
+solve(sp13)
+get.objective(sp13)
+sp13
+get.variables(sp13)
+sp13
+get.constraints(sp13)
+```
+###remarks
+No solution for this branch.
+
+###Branch 14
+```{r}
+sp14 <- read.lp("ip_14yzhao28.lp")
+sp14
+```
+```{r}
+solve(sp14)
+get.objective(sp14)
+sp14
+get.variables(sp14)
+sp14
+get.constraints(sp14)
+```
+###remarks
+We have got max= 39, and x1= 3, x2= 3. 
+
+###remarks
+I have put all variables into a csv file.
+
+###Read
+```{r}
+variable <- read.csv("ip_yzhao28.csv")
+variable
+```
+```{r}
+summary(variable)
+```
+
+```{r}
+library(ggplot2)
+library(esquisse)
+library(shiny)
+```
+
+```{r}
+ggplot(data = variable) +
+  aes(x = x1, y = x2) +
+  geom_point(color = '#0c4c8a') +
+  theme_minimal()
+```
+```{r}
+ggplot(data = variable) +
+  aes(x = Branch.., y = objective) +
+  geom_line(color = '#0c4c8a') +
+  theme_minimal()
+```
+###remarks
+From this two graphs we can get the optimum solution for interger solutions. 
