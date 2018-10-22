@@ -1,0 +1,116 @@
+---
+title: "Dea_yzhao28"
+output: html_document
+---
+```{r}
+library(Benchmarking)
+```
+
+```{r}
+x <- matrix(c(150,400,320,520,350,320, 0.2, 0.7, 1.2, 2.0, 1.2, 0.7), ncol = 2)
+y <- matrix(c(14, 14, 42, 28, 19, 14, 3.5, 21, 10.5, 42, 25, 15), ncol = 2)
+x
+y
+colnames(x) <- c("hours", "supplies")
+colnames(y) <- c("reimbursed", "privately")
+x
+y
+```
+```{r}
+e <- dea(x,y, RTS = "vrs")
+e
+peers(e)
+lambda(e)
+dea.plot(x,y, RTS = "vrs")
+```
+```{r}
+library(formattable)
+DF <- data.frame(DMU= c(1,2,3,4,5,6), efficiency= c(1.0000,1.0000,1.0000,1.0000,1.0000,0.8963))
+DF
+```
+
+```{r}
+e <- dea(x,y, RTS = "crs")
+e
+peers(e)
+lambda(e)
+dea.plot(x,y, RTS = "crs")
+```
+```{r}
+DF <- data.frame(DMU= c(1,2,3,4,5,6), efficiency= c(1.0000,1.0000,1.0000,1.0000,0.9775,0.8675))
+DF
+```
+
+```{r}
+e <- dea(x,y, RTS = "fdh")
+e
+peers(e)
+lambda(e)
+dea.plot(x,y, RTS = "fdh")
+```
+```{r}
+DF <- data.frame(DMU= c(1,2,3,4,5,6), efficiency= c(1.0000,1.0000,1.0000,1.0000,1.0000,1.0000))
+DF
+```
+
+```{r}
+e <- dea(x,y, RTS = "irs")
+e
+peers(e)
+lambda(e)
+dea.plot(x,y, RTS = "irs")
+```
+```{r}
+DF <- data.frame(DMU= c(1,2,3,4,5,6), efficiency=c(1.0000, 1.0000, 1.0000, 1.0000, 1.0000, 0.8963) )
+DF
+```
+
+```{r}
+e <- dea(x,y, RTS = "drs")
+e
+peers(e)
+lambda(e)
+dea.plot(x,y, RTS = "drs")
+```
+```{r}
+DF <- data.frame(DMU= c(1,2,3,4,5,6), efficiency= c(1.0000,1.0000,1.0000,1.0000,0.9775,0.8675))
+DF
+```
+
+```{r}
+e <- dea(x,y, RTS = "add")
+e
+peers(e)
+lambda(e)
+dea.plot(x,y, RTS = "add")
+```
+```{r}
+DF <- data.frame(DMU= c(1,2,3,4,5,6), efficiency= c(1.0000,1.0000,1.0000,1.0000,1.0000,1.0000))
+DF
+```
+
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
