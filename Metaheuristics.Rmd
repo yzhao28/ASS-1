@@ -1,0 +1,167 @@
+---
+title: "Metaheuristics"
+output: html_document
+---
+###Question 1
+
+```{r}
+library(GenSA)
+library(ggplot2)
+library(GA)
+
+```
+```{r}
+library('ggplot2')
+library('quantmod')
+library('GA')
+library('GenSA')
+```
+
+
+```{r}
+tickers <- c("AAPL", "AMZN", "GOOGL", "FB", "CMG")
+getSymbols(tickers, from = "2015-12-01", to = "2018-11-05")
+P <- NULL
+for(ticker in tickers) {
+ tmp <- Cl(to.monthly(eval(parse(text = ticker))))
+ P <- cbind(P, tmp)
+}
+colnames(P) <- tickers
+R <- diff(log(P))
+R <- R[-1,]
+mu <- colMeans(R)
+sigma <- cov(R)
+library("PerformanceAnalytics")
+pContribCVaR <- ES(weights = rep(0.2, 5), method = "gaussian", portfolio_method = "component", mu = mu, sigma = sigma)$pct_contrib_ES
+obj <- function(w) {
+ fn.call <<- fn.call + 1
+ if (sum(w) == 0) { w <- w + 1e-2 }
+ w <- w / sum(w)
+ CVaR <- ES(weights = w, method = "gaussian", portfolio_method = "component", mu = mu, sigma = sigma)
+ tmp1 <- CVaR$ES
+ tmp2 <- max(CVaR$pct_contrib_ES - 0.225, 0)
+ out <- tmp1 - 1e+3 * tmp2
+ return(out)
+}
+obj1 <- function(w) {
+ fn.call <<- fn.call + 1
+ if (sum(w) == 0) { w <- w + 1e-2 }
+ w <- w / sum(w)
+ CVaR <- ES(weights = w, method = "gaussian", portfolio_method = "component", mu = mu, sigma = sigma)
+ tmp1 <- CVaR$ES
+ tmp2 <- max(CVaR$pct_contrib_ES - 0.225, 0)
+ out1 <- tmp1 + 1e+3 * tmp2
+ return(out1)
+}
+```
+
+```{r}
+# x1 = AAPL, x2 = AMZN, x3 = GOOGL, x4 = FB and x5 = CMG
+set.seed(1234)
+fn.call <<- 0
+gap <- ga(type = "real-valued",fitness=obj,lower=rep(0,5),upper=rep(1,5), popSize = 50,maxiter = 150, pcrossover = 0.75, pmutation = 0.1)
+nsol <- gap@solution
+nsol <- nsol / sum(nsol)
+fn.call.gap <- fn.call
+nsol
+summary(gap)
+plot(gap)
+```
+
+```{r}
+set.seed(1234)
+fn.call <<- 0
+out.GenSA <- GenSA(fn = obj1, lower = rep(0, 5), upper = rep(1, 5), control = list(smooth = FALSE, max.call = 3000))
+fn.call.GenSA <- fn.call
+out.GenSA$value
+out.GenSA$counts
+cat("GenSA call functions", fn.call.GenSA, "times.\n")
+wstar.GenSA <- out.GenSA$par
+wstar.GenSA <- wstar.GenSA / sum(wstar.GenSA)
+rbind(tickers, round(100 * wstar.GenSA, 2))
+100 * (sum(wstar.GenSA * mu) - mean(mu))
+wstar.GenSA
+```
+
+
+```{r}
+M <- matrix(c(nsol, wstar.GenSA), nrow = 5, ncol = 2)
+rownames(M) = c("AAPL", "AMZN", "GOOGL", "FB", "CMG")
+colnames(M) = c("GAPortfolio", "GenSAPortfolio")
+M
+TickerSymbol <- (c("AAPL","AMZN","GOOGL","FB","CMG","______","TOTAL"))
+Company <- (c("Apple","Amazon","Google","Facebook","Chipotle","",""))
+GA_percent  <- (c(23,19,23,17,19,"_____ ",100))
+GenSA_percent <- (c(23,10,23,25,19,"_____ ",100))
+TData <- data.frame(TickerSymbol, Company, GA_percent, GenSA_percent) 
+TData
+```
+
+###Question 2
+
+
+```{r}
+x <- c(17, 23, 43, 56, 60, 64, 70, 75, 80, 82, 87, 89)
+y <- c(13, 15, 18, 19, 19.5, 20, 20.3, 20.12, 21.76, 22, 23.3, 24)
+z <- data.frame(x,y)
+```
+
+```{r}
+ssyy <- sum((y - mean(y)) ^ 2)
+ssxy <- sum((x - mean(x)) * (y - mean(y)))
+ssx <- sum((x - mean(x)) ^ 2)
+b1 <- ssxy/ssx
+b0 <- mean(y) - b1 * mean(x)
+
+print(b1)
+print(b0)
+```
+```{r}
+linear_model <- lm(y ~ x)
+
+summary(linear_model)
+```
+```{r}
+obj <- function (r) {
+    fn <- function (b0, b1) {
+        return (sum(y - (b0 + b1 * x)) ^ 2)
+    }
+    return (fn(r[1], r[2]))
+}
+
+ubound <- c(2, 1)
+lbound <- c(0, 0)
+```
+
+
+```{r}
+ga <- ga(type = "real-valued",fitness = function (x) -obj(x),lower = lbound,upper = ubound, popSize = 50)
+summary(ga)
+plot(ga)
+```
+```{r}
+par <- c(1, 0)
+
+sa <- GenSA(
+    par = par,
+    lower = lbound,
+    upper = ubound,
+    fn = obj
+)
+sa[c("value","par","counts")] 
+```
+
+
+
+
+```{r}
+GG <- ggplot(data = z, aes(x=x, y=y,color= "regression"))+
+  geom_point(shape= 1)+ 
+  geom_smooth(method = lm, se= FALSE, color= "Blue") +
+  geom_abline(aes(intercept = 1.4771745, slope = 0.2925656, color= "par")) 
+GG <- GG + geom_abline(aes(intercept = 1.127171, slope = 0.2981912, color= "GA")) + ggtitle("x-y") 
+
+GG
+```
+
+
